@@ -24,6 +24,9 @@ data "terraform_remote_state" "main" {
   }
 }
 
+output "VNET_info" {
+  value = data.terraform_remote_state.main.outputs.*
+}
 
 
 resource "azurerm_mysql_server" "terraform" {
@@ -53,6 +56,8 @@ resource "azurerm_mysql_database" "wordpress" {
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
 }
+
+
 
 #output endpoint {
 #  value = azurerm_mysql_server.terraform.endpoint
