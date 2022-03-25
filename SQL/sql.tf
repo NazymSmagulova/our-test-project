@@ -27,8 +27,8 @@ data "terraform_remote_state" "main" {
 
 resource "azurerm_mysql_server" "terraform" {
   name                = "terraform-mysqlserver"
-  location            = "data.azurerm_resource_group.terraform.location"
-  resource_group_name = "data.azurerm_resource_group.terraform.name"
+  location            = "westus"
+  resource_group_name = "terraform-resources"
 
   administrator_login          = "mysqladmin"   # When sql created, it will give username@url 
   administrator_login_password = "H@Sh1CoR3!"
