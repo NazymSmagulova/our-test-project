@@ -49,7 +49,7 @@ resource "azurerm_mysql_server" "terraform" {
 resource "azurerm_mysql_database" "wordpress" {
   name                = "wordpressdb"
   resource_group_name = data.terraform_remote_state.main.outputs.resource_group_name
-  server_name         = data.terraform_remote_state.main.terraform.server_name
+  server_name         = data.terraform_remote_state.main.outputs.server_name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
 }
