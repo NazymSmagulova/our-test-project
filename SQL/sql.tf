@@ -24,7 +24,9 @@ data "terraform_remote_state" "main" {
   }
 }
 
-
+output "vnet_info" {
+  value = data.terraform_remote_state.main.outputs.*
+}
 
 resource "azurerm_mysql_server" "terraform" {
   name                = "terraform-mysqlserver"
