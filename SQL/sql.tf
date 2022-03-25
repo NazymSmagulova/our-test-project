@@ -24,10 +24,6 @@ data "terraform_remote_state" "main" {
   }
 }
 
-output "VNET_info" {
-  value = data.azurerm_virtual_network.terraform.outputs.*
-}
-
 
 resource "azurerm_mysql_server" "terraform" {
   name                = "terraform-mysqlserver"
@@ -60,9 +56,9 @@ resource "azurerm_mysql_database" "wordpress" {
 
 
 
-output "endpoint" {
-  value = azurerm_mysql_server.terraform.endpoint
-}
+#output "endpoint" {
+#  value = azurerm_mysql_server.terraform.endpoint
+#}
 
 
 # mysql -h endpoint_get_from-console     -u  username@url_from_console   -p password
