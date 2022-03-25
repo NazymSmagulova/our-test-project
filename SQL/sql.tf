@@ -59,7 +59,7 @@ resource "azurerm_mysql_database" "wordpress" {
 
 
 
-output endpoint {
+output "endpoint" {
   value = azurerm_mysql_server.terraform.endpoint
 }
 
