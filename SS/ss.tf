@@ -3,10 +3,12 @@ terraform {
     resource_group_name  = "StorageAccount-ResourceGroup"
     storage_account_name = "team2project"
     container_name       = "tfstate"
-    key                  = "path/to/my/asg/prod.terraform.tfstate"
-    access_key           = "pbdzjjYmnpXTUmYIi/bLxl5qhq+iDbkHXCTFe+UhTwi1UoF1ZvzOszr/KcZFXtkvLPgm+YiyX6NI+AStIDDJsA=="
+    key                  = "path/to/my/key/prod.terraform.tfstate"
+    access_key = "pbdzjjYmnpXTUmYIi/bLxl5qhq+iDbkHXCTFe+UhTwi1UoF1ZvzOszr/KcZFXtkvLPgm+YiyX6NI+AStIDDJsA=="
   }
 }
+
+
 
 terraform {
   required_providers {
@@ -22,72 +24,64 @@ provider "azurerm" {
   features {}
 }
 
-
-resource "azurerm_subnet" "subnet2" {
-  name                 = "subnet2"
-  resource_group_name = "terraform-resources"
-  virtual_network_name = "terraform_vnet"
-  address_prefixes     = ["10.0.2.0/24"]
-}
-
-resource "azurerm_linux_virtual_machine_scale_set" "terraform_ss" {
-  name                = "terraform_ss"
-  resource_group_name = "terraform-resources"
+# Create a resource group
+resource "azurerm_resource_group" "terraform" {
+  name     = "terraform-resources"
   location = "westus"
-  sku                 = "Standard_F2"
-  instances           = 1
-  admin_username      = "adminuser"
-  admin_ssh_key {
-    username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
-  }
-
-  os_disk {
-    storage_account_type = "Standard_LRS"
-    caching              = "ReadWrite"
-  }
-
-  network_interface {
-    name    = "terraform"
-    primary = true
-
-    ip_configuration {
-      name      = "subnet2"
-      primary   = true
-      subnet_id = azurerm_subnet.internal.id
-    }
-  }
 }
-resource "azurerm_traffic_manager_profile" "tm" {
-  name                = "tm-profile"
-  resource_group_name = "terraform-resources"
-  traffic_routing_method = "Weighted"
+resource "azurerm_network_security_group" "terraform" {
+  name                = "terraform-security-group"
+  location            = azurerm_resource_group.terraform.location
+  resource_group_name = azurerm_resource_group.terraform.name
+}
+resource "azurerm_network_security_rule" "terraform" {
+  name                        = "test123"
+  priority                    = 100
+  direction                   = "Outbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.terraform.name
+  network_security_group_name = azurerm_network_security_group.terraform.name
+}
 
-  dns_config {
-    relative_name = "tm-profile"
-    ttl           = 100
+# Create a virtual network within the resource group
+resource "azurerm_virtual_network" "terraform" {
+  name                = "terraform_vnet"
+  location            = azurerm_resource_group.terraform.location
+  resource_group_name = azurerm_resource_group.terraform.name
+  address_space       = ["10.0.0.0/16"]
+
+  subnet {
+    name           = "subnet1"
+    address_prefix = "10.0.1.0/24"
+    security_group = azurerm_network_security_group.terraform.id
   }
 
-  monitor_config {
-    protocol                     = "http"
-    port                         = 80
-    path                         = "/"
-    interval_in_seconds          = 30
-    timeout_in_seconds           = 9
-    tolerated_number_of_failures = 3
+  subnet {
+    name           = "subnet2"
+    address_prefix = "10.0.2.0/24"
+    security_group = azurerm_network_security_group.terraform.id
+  }
+  subnet {
+    name           = "subnet3"
+    address_prefix = "10.0.3.0/24"
+    security_group = azurerm_network_security_group.terraform.id
   }
 }
 
-resource "azurerm_traffic_manager_azure_endpoint" "terraform" {
-  name                = "terraform-endpoint"
-  resource_group_name = "terraform-resources"
-  profile_id          = azurerm_traffic_manager_profile.tm.id
-  weight              = 100
+output "vnet_id" {
+    value = azurerm_virtual_network.terraform.id
+}
+
+
+output "subnet"{
+    value = azurerm_virtual_network.terraform.subnet
+}
+
+output "subnet_id" {
+  value = azurerm_virtual_network.terraform.id
 }
