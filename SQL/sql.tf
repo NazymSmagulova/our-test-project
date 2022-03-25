@@ -14,7 +14,7 @@ terraform {
 
 
 data "terraform_remote_state" "main" {
-  backend "azurerm" {
+  backend = "azurerm" {
     resource_group_name  = "StorageAccount-ResourceGroup"
     storage_account_name = "team2project"
     container_name       = "tfstate"
