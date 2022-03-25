@@ -25,14 +25,14 @@ data "terraform_remote_state" "main" {
 }
 
 output "VNET_info" {
-  value = data.terraform_remote_state.main.outputs.*
+  value = data.azurerm_virtual_network.terraform.outputs.*
 }
 
 
 resource "azurerm_mysql_server" "terraform" {
   name                = "terraform-mysqlserver"
   location            = "westus"
-  resource_group_name = "terraform-resources"
+  resource_group_name = "data.azurerm_resource_group.terraform.name"
 
   administrator_login          = "mysqladmin"   # When sql created, it will give username@url 
   administrator_login_password = "H@Sh1CoR3!"
@@ -49,6 +49,7 @@ resource "azurerm_mysql_server" "terraform" {
   ssl_minimal_tls_version_enforced  = "TLS1_2"
 }
 
+
 resource "azurerm_mysql_database" "wordpress" {
   name                = "wordpressdb"
   resource_group_name = azurerm_mysql_server.terraform.resource_group_name
@@ -59,9 +60,9 @@ resource "azurerm_mysql_database" "wordpress" {
 
 
 
-#output "endpoint" {
-#  value = azurerm_mysql_server.terraform.endpoint
-#}
+output "endpoint" {
+  value = azurerm_mysql_server.terraform.endpoint
+}
 
 
 # mysql -h endpoint_get_from-console     -u  username@url_from_console   -p password
