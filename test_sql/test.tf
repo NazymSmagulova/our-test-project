@@ -25,8 +25,8 @@ data "terraform_remote_state" "main" {
 }
 
 
-resource "azurerm_mysql_server" "terraform" {
-  name                = "terraform-mysqlserver"
+resource "azurerm_mysql_server" "example" {
+  name                = "example-mysqlserver"
   location            = "westus"
   resource_group_name = "terraform-resources"
 
