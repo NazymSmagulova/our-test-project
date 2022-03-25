@@ -59,9 +59,9 @@ resource "azurerm_mysql_database" "wordpress" {
 
 
 
-output "endpoint" {
-  value = azurerm_mysql_server.terraform.endpoint
-}
+#output "endpoint" {
+#  value = azurerm_mysql_server.terraform.endpoint
+#}
 
 
 # mysql -h endpoint_get_from-console     -u  username@url_from_console   -p password
