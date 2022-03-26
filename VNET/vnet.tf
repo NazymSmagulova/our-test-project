@@ -73,6 +73,12 @@ resource "azurerm_virtual_network" "terraform" {
   }
 }
 
+
+output "vnet_info" {
+  value = data.terraform_remote_state.main.outputs.*
+}
+
+
 output "vnet_id" {
     value = azurerm_virtual_network.terraform.id
 }

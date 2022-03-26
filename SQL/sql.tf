@@ -24,13 +24,10 @@ data "terraform_remote_state" "main" {
   }
 }
 
-#output "vnet_info" {
-#  value = data.terraform_remote_state.main.outputs.*
-#}
 
-resource "azurerm_mysql_server" "wordpress" {
-  name                = "wordpress-mysqlserver"
-  location            = data.terraform_remote_state.main.outputs.location
+resource "azurerm_mysql_server" "terraform" {
+  name                = "terraform-mysqlserver"
+  location            = "westus"
   resource_group_name = data.terraform_remote_state.main.outputs.resource_group_name
 
   administrator_login          = "mysqladmin" # When sql created, it will give username@url 
