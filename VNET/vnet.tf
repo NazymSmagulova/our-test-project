@@ -8,16 +8,6 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "main" {
-  backend = "azurerm"
-  config = {
-    resource_group_name  = "StorageAccount-ResourceGroup"
-    storage_account_name = "team2project"
-    container_name       = "tfstate"
-    key                  = "path/to/my/vnet/prod.terraform.tfstate"
-    access_key           = "pbdzjjYmnpXTUmYIi/bLxl5qhq+iDbkHXCTFe+UhTwi1UoF1ZvzOszr/KcZFXtkvLPgm+YiyX6NI+AStIDDJsA=="
-  }
-}
 
 
 terraform {
@@ -83,12 +73,6 @@ resource "azurerm_virtual_network" "terraform" {
   }
 }
 
-
-output "vnet_info" {
-  value = data.terraform_remote_state.main.outputs.*
-}
-
-
 output "vnet_id" {
     value = azurerm_virtual_network.terraform.id
 }
@@ -100,4 +84,10 @@ output "subnet"{
 
 output "subnet_id" {
   value = azurerm_virtual_network.terraform.id
+}
+output "vnet_name"{
+    value = azurerm_virtual_network.terraform.name
+}
+output resource_group_name {
+  value = azurerm_resource_group.terraform.name
 }
