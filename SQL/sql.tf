@@ -62,6 +62,10 @@ output "fqdn" {
   value = azurerm_mysql_server.terraform.fqdn
 }
 
+output "server_id" {
+  value = azurerm_mysql_server.terraform.id
+}
+
 
 # mysql -h endpoint_get_from-console     -u  username@url_from_console   -p password
 # create database wordpress; 
