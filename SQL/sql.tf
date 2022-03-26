@@ -52,10 +52,10 @@ resource "azurerm_mysql_server" "project" {
   ssl_minimal_tls_version_enforced = "TLS1_2"
 }
 
-resource "azurerm_mysql_database" "wordpress" {
-  name                = "wordpressdb"
+resource "azurerm_mysql_database" "project" {
+  name                = "projectdb"
   resource_group_name = data.terraform_remote_state.main.outputs.resource_group_name
-  server_name         = azurerm_mysql_server.terraform.name
+  server_name         = azurerm_mysql_server.project.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
 }
