@@ -28,9 +28,9 @@ output "full_info" {
  value = data.terraform_remote_state.main.outputs.*
 }
 
-output "id" {
-  value = azurerm_mysql_server.terraform.id
-}
+// output "id" {
+//   value = azurerm_mysql_server.terraform.id
+// }
 
 
 resource "azurerm_mysql_server" "project" {
